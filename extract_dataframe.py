@@ -72,25 +72,29 @@ class TweetDfExtractor:
         return source
 
     def find_screen_name(self)->list:
-         screen_name = [tw.get('user', {}).get('screen_name', None)
+        
+        screen_name = [tw.get('user', {}).get('screen_name', None)
                        for tw in self.tweets_list]
 
         return screen_name
 
     def find_followers_count(self)->list:
-         followers_count = [tw.get('user', {}).get(
+        
+        followers_count = [tw.get('user', {}).get(
             'followers_count', 0) for tw in self.tweets_list]
 
         return followers_count
 
     def find_friends_count(self)->list:
-         friends_count = [tw.get('user', {}).get('friends_count', 0)
+        
+        friends_count = [tw.get('user', {}).get('friends_count', 0)
                          for tw in self.tweets_list]
 
         return friends_count
         
     def is_sensitive(self)->list:
-         try:
+        
+        try:
             is_sensitive = [tw['retweeted_status']['possibly_sensitive']
                             for tw in self.tweets_list]
         except KeyError:
@@ -99,7 +103,12 @@ class TweetDfExtractor:
 
     def find_favourite_count(self)->list:
         
-    
+        favourite_count = [tw.get('retweeted_status', {}).get(
+            'favorite_count', 0) for tw in self.tweets_list]
+
+        return favourite_count
+
+            
     def find_retweet_count(self)->list:
         retweet_count = 
 
