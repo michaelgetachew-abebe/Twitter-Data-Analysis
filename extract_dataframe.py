@@ -110,19 +110,18 @@ class TweetDfExtractor:
 
             
     def find_retweet_count(self)->list:
-        
         retweet_count = [tw.get('retweeted_status', {}).get(
             'retweet_count') for tw in self.tweets_list]
 
         return retweet_count
 
     def find_hashtags(self)->list:
-        
         hashtags = [tw.get('entities', {}).get('hashtags', None)
                     for tw in self.tweets_list]
         
     def find_mentions(self)->list:
-        mentions = 
+        mentions = [tw.get('entities', {}).get('user_mentions', None)
+                    for tw in self.tweets_list]
 
 
     def find_location(self)->list:
