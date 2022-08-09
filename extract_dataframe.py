@@ -61,6 +61,8 @@ class TweetDfExtractor:
 
     def find_created_time(self)->list:
        
+        created_at = [tw.get('created_at', None) for tw in self.tweets_list]
+
         return created_at
 
     def find_source(self)->list:
