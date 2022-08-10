@@ -25,7 +25,7 @@ class Clean_Tweets:
         """
         drop duplicate rows
         """
-        df = df.drop_duplicates(inplace=True)
+        df.drop_duplicates(inplace=True)
 
         return df
 
@@ -35,7 +35,7 @@ class Clean_Tweets:
         """
 
         df['created_at'] = pd.to_datetime(
-            df['Datetime'])
+            df['created_at'])
 
         return df
 
@@ -48,8 +48,22 @@ class Clean_Tweets:
         df["subjectivity"] = pd.to_numeric(df["subjectivity"])
         df["retweet_count"] = pd.to_numeric(df["retweet_count"])
         df["favorite_count"] = pd.to_numeric(df["favorite_count"])
-        df["friends_count "] = pd.to_numeric(df["polarity"])
+        df["friends_count "] = pd.to_numeric(df["friends_count"])
+        df["followers_count"] = pd.to_numeric(df["followers_count"])
 
+        return df
+    
+    def handle_missing_values(self, df: pd.DataFrame) ->  pd.DataFrame:
+        """
+            handle missing values
+        """
+        
+        df['possibly_sensitive'] = df['possibly_sensitive'].fillna(0)
+        df['place'] = df['place'].fillna(" ")
+        df['hashtags'] = df['hashtags'].fillna(" ")
+        df['user_mentions'] = df['user_mentions'].fillna(" ")
+        df['retweet_count'] = df['retweet_count'].fillna(0)
+        
         return df
 
     def remove_non_english_tweets(self, df: pd.DataFrame) -> pd.DataFrame:
