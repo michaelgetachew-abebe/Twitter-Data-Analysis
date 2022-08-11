@@ -123,7 +123,7 @@ class TweetDfExtractor:
         lang = [tw.get('lang', None) for tw in self.tweets_list]
         return lang
 
-    def get_tweet_df(self, save=False) -> pd.DataFrame:
+    def get_tweet_df(self, save=True) -> pd.DataFrame:
         """required column to be generated you should be creative and add more features"""
 
         columns = ['created_at', 'source', 'original_text', 'polarity', 'subjectivity', 'lang', 'favorite_count', 'retweet_count',
@@ -146,7 +146,7 @@ class TweetDfExtractor:
         data = zip(created_at, source, text, polarity, subjectivity, lang, fav_count, retweet_count,
                    screen_name, follower_count, friends_count, sensitivity, hashtags, mentions, location)
         df = pd.DataFrame(data=data, columns=columns)
-        
+
         if save:
             df.to_csv('extracted_from_JSON.csv', index=False)
             print('File Successfully Saved.!!!')
