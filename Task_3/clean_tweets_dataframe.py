@@ -27,7 +27,6 @@ class Clean_Tweets:
         drop duplicate rows
         """
         df.drop_duplicates(inplace=True)
-        print(df)
 
         return df
 
@@ -73,7 +72,7 @@ class Clean_Tweets:
         df = self.convert_to_datetime(df)
 
         if save:
-            df.to_csv('cleaned_tweet.csv', index=False)
+            df.to_csv('cleaned_tweets.csv', index=False)
             print('File Successfully Saved.!!!')
 
         return df
