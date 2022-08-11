@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas.io.parsers import read_csv
 
 
 class Clean_Tweets:
@@ -13,7 +14,7 @@ class Clean_Tweets:
     def drop_unwanted_column(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         remove rows that has column names. This error originated from
-        the data collection st  
+        the data collection stage.  
         """
         unwanted_rows = df[df['retweet_count'] == 'retweet_count'].index
         df.drop(unwanted_rows, inplace=True)
@@ -26,6 +27,7 @@ class Clean_Tweets:
         drop duplicate rows
         """
         df.drop_duplicates(inplace=True)
+        print(df)
 
         return df
 
@@ -48,22 +50,8 @@ class Clean_Tweets:
         df["subjectivity"] = pd.to_numeric(df["subjectivity"])
         df["retweet_count"] = pd.to_numeric(df["retweet_count"])
         df["favorite_count"] = pd.to_numeric(df["favorite_count"])
-        df["friends_count "] = pd.to_numeric(df["friends_count"])
-        df["followers_count"] = pd.to_numeric(df["followers_count"])
+        df["friends_count "] = pd.to_numeric(df["polarity"])
 
-        return df
-    
-    def handle_missing_values(self, df: pd.DataFrame) ->  pd.DataFrame:
-        """
-            handle missing values
-        """
-        
-        df['possibly_sensitive'] = df['possibly_sensitive'].fillna(0)
-        df['place'] = df['place'].fillna(" ")
-        df['hashtags'] = df['hashtags'].fillna(" ")
-        df['user_mentions'] = df['user_mentions'].fillna(" ")
-        df['retweet_count'] = df['retweet_count'].fillna(0)
-        
         return df
 
     def remove_non_english_tweets(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -74,3 +62,34 @@ class Clean_Tweets:
         df = df.drop(df[df['lang'] != 'en'].index)
 
         return df
+
+    def clean_data(self, df: pd.DataFrame, save) -> pd.DataFrame:
+
+        df = self.drop_duplicate(df)
+        df = self.convert_to_numbers(df)
+        df = self.remove_non_english_tweets(df)
+        df = self.drop_unwanted_column(df)
+        df = self.convert_to_datetime(df)
+
+        if save:
+            df.to_csv('cleaned_tweet_data.csv', index=False)
+            print('File Successfully Saved.!!!')
+
+        return df
+
+
+def read_processed_data(csv_path):
+
+    try:
+        df = pd.read_csv(csv_path)
+        print("file read as csv")
+    except FileNotFoundError:
+        print("file not found")
+
+
+if __name__ == "__main__":
+    proccessed_df = read_csv('processed_tweet_data.csv')
+    cleaner = Clean_Tweets(proccessed_df)
+    cleaner.clean_data(proccessed_df, save=True)
+    # cleaner.drop_duplicate(proccessed_df)
+    # print(proccessed_df)
