@@ -73,7 +73,7 @@ class Clean_Tweets:
         df = self.convert_to_datetime(df)
 
         if save:
-            df.to_csv('cleaned_tweet_data.csv', index=False)
+            df.to_csv('cleaned_tweet.csv', index=False)
             print('File Successfully Saved.!!!')
 
         return df
@@ -89,8 +89,8 @@ def read_processed_data(csv_path):
 
 
 if __name__ == "__main__":
-    proccessed_df = read_csv('processed_tweet_data.csv')
-    cleaner = Clean_Tweets(proccessed_df)
-    cleaner.clean_data(proccessed_df, save=True)
-    # cleaner.drop_duplicate(proccessed_df)
-    # print(proccessed_df)
+    extracted_df = read_csv('extracted_from_JSON.csv')
+    cleaner = Clean_Tweets(extracted_df)
+    cleaner.clean_data(extracted_df, save=True)
+    # cleaner.drop_duplicate(extracted_df)
+    # print(extracted_df)
