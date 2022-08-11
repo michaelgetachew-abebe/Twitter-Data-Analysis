@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 from textblob import TextBlob
-import re
+
 
 def read_json(json_file: str) -> list:
     """
@@ -40,12 +40,9 @@ class TweetDfExtractor:
         return statuses_count
 
     def find_full_text(self) -> list:
-        text = []
-        for tw in self.tweets_list:
-            try:
-                text.append(tw['full_text'])
-            except KeyError:
-                text.append(tw['text'])
+        text = [tw.get('retweeted_status', {}).get('extended_tweet', {}).get(
+            'full_text') for tw in self.tweets_list]
+
         return text
 
     def find_sentiments(self, text) -> list:
@@ -56,7 +53,6 @@ class TweetDfExtractor:
             if (i):
                 polarity.append(TextBlob(str(i)).polarity)
                 subjectivity.append(TextBlob(str(i)).subjectivity)
-
         return polarity, subjectivity
 
     def find_created_time(self) -> list:
@@ -66,7 +62,7 @@ class TweetDfExtractor:
 
     def find_source(self) -> list:
         source = [tw.get('source', None) for tw in self.tweets_list]
-            
+
         return source
 
     def find_screen_name(self) -> list:
@@ -108,53 +104,18 @@ class TweetDfExtractor:
         return retweet_count
 
     def find_hashtags(self) -> list:
-        all_hashtag_objs = [tw.get('entities', {}).get('hashtags', None)
+        hashtags = [tw.get('entities', {}).get('hashtags', None)
                     for tw in self.tweets_list]
-        hash_tags = []
-        for hashtag_list_obj in all_hashtag_objs:
-            if (hashtag_list_obj):
-                cur_hashtags = []
-                for hashtag_obj in hashtag_list_obj:
-                    try:
-                        cur_hashtags.append(hashtag_obj['text'])
-                    except KeyError:
-                        pass
-                hash_tags.append(" ".join(cur_hashtags))
-            else:
-                hash_tags.append(None)
-
-        return hash_tags
-
 
     def find_mentions(self) -> list:
-        all_mentions_objs = [tw.get('entities', {}).get('user_mentions', None)
+        mentions = [tw.get('entities', {}).get('user_mentions', None)
                     for tw in self.tweets_list]
-
-        mentions = []
-        for mention_list_obj in all_mentions_objs:
-            if (mention_list_obj):
-                cur_mentions = []
-
-                for mention_obj in mention_list_obj:
-                    try:
-                        cur_mentions.append(mention_obj['screen_name'])
-                    except KeyError:
-                        pass
-                mentions.append(" ".join(cur_mentions))
-            else:
-                mentions.append(None)
-
-        return mentions
 
     def find_location(self) -> list:
         location = [tw.get('user', {}).get('location', None)
                     for tw in self.tweets_list]
 
         return location
-
-    def find_lang(self) -> list:
-        lang = [tw.get('lang', None) for tw in self.tweets_list]
-        return lang
 
     def get_tweet_df(self, save=False) -> pd.DataFrame:
         """required column to be generated you should be creative and add more features"""
@@ -181,7 +142,7 @@ class TweetDfExtractor:
         df = pd.DataFrame(data=data, columns=columns)
 
         if save:
-            df.to_csv('extracted_from_JSON.csv', index=False)
+            df.to_csv('processed_tweet_data.csv', index=False)
             print('File Successfully Saved.!!!')
 
         return df
@@ -193,7 +154,7 @@ if __name__ == "__main__":
                'original_author', 'screen_count', 'followers_count', 'friends_count', 'possibly_sensitive', 'hashtags', 'user_mentions', 'place', 'place_coord_boundaries']
     _, tweet_list = read_json(r"C:/Users/mikyg/OneDrive/Desktop/Week 0/Twitter-Data-Analysis/data/global_twitter_data.json")
     tweet = TweetDfExtractor(tweet_list)
-    tweet_df = tweet.get_tweet_df(save=True)
+    # tweet_df = tweet.get_tweet_df()
     tweet.find_statuses_count()
 
     # use all defined functions to generate a dataframe with the specified columns above
