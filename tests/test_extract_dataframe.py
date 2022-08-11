@@ -1,10 +1,7 @@
-from extract_dataframe import read_json
-from extract_dataframe import TweetDfExtractor
-import os
-import sys
 import unittest
 import pandas as pd
-sys.path.append(os.path.abspath(os.path.join('..')))
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('./Twitter-Data-Analysis/')))
 
 from extract_dataframe import read_json
 from extract_dataframe import TweetDfExtractor
@@ -13,8 +10,8 @@ from extract_dataframe import TweetDfExtractor
 # we will need about 5 tweet samples. 
 # Create a sample not more than 10 tweets and place it in a json file.
 # Provide the path to the samples tweets file you created below
-sampletweetsjsonfile = r"./data/global_twitter_data.json"   #put here the path to where you placed the file e.g. ./sampletweets.json. 
-_, tweet_list = read_json(sampletweetsjsonfile)
+
+_, tweet_list = read_json("C:/Users/mikyg/OneDrive/Desktop/Week 0/Twitter-Data-Analysis/data/global_twitter_data.json")
 
 columns = [
     "created_at",
@@ -51,14 +48,14 @@ class TestTweetDfExtractor(unittest.TestCase):
 
     def setUp(self) -> pd.DataFrame:
         self.df = TweetDfExtractor(tweet_list[:5])
-        tweet_df = self.df.get_tweet_df()
+        #tweet_df = self.df.get_tweet_df()
 
     def test_find_statuses_count(self):
          self.assertEqual(self.df.find_statuses_count(), [
                          8097, 5831, 1627, 1627, 18958])
 
     def test_find_full_text(self):
-        text = ['None, None, None, None']
+        text = ['Null','None', 'None', 'None', 'None']
 
         self.assertEqual(self.df.find_full_text(), text)
 
