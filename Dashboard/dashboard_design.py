@@ -8,6 +8,7 @@ import plotly.express as px
 st.set_page_config(page_title="Day 5", layout="wide")
 
 def loadData():
+    #query = "select * from TweetInformation"
     df = pd.read_csv('C:/Users/mikyg/OneDrive/Desktop/Week 0/cleaned_tweets.csv')
     return df
 
@@ -68,8 +69,8 @@ def stBarChart():
 
 def langPie():
     df = loadData()
-    dfLangCount = pd.DataFrame({'Tweet_count': df.groupby(['language'])['original_text'].count()}).reset_index()
-    dfLangCount["language"] = dfLangCount["language"].astype(str)
+    dfLangCount = pd.DataFrame({'Tweet_count': df.groupby(['lang'])['original_text'].count()}).reset_index()
+    dfLangCount["language"] = dfLangCount["lang"].astype(str)
     dfLangCount = dfLangCount.sort_values("Tweet_count", ascending=False)
     dfLangCount.loc[dfLangCount['Tweet_count'] < 10, 'lang'] = 'Other languages'
     st.title(" Tweets Language pie chart")
